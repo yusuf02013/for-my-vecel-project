@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rock, Paper & Scissors</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 50px;
+        background-color: #f2f2f2;
+      }
+      h1 {
+        fontsize: 40px;
+      }
+      button {
+        font-size: 50px;
+        padding: 20px;
+        border: none;
+        margin: 10px;
+        border-radius: 15px;
+        background: white;
+        cursor: pointer;
+      }
+      button:hover {
+        background: goldenrod;
+      }
+      #yourchoice,
+      #computerchoice,
+      #result {
+        margin: 15px;
+        font-size: 22px;
+      }
+      .score {
+        margin-top: 25px;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Rock, Paper & Scissors</h1>
+    <p>Choose one :</p>
+
+    <div>
+      <button onclick="playGame('rock')">🪨</button>
+      <button onclick="playGame('paper')">📄</button>
+      <button onclick="playGame('scissors')">✂️</button>
+    </div>
+    <p id="yourchoice">yourchoice:</p>
+    <p id="computerchoice">computerchoice:</p>
+    <p id="result">result:</p>
+    <div class="score">
+      <p>
+        your score:
+        <span id="playscorescore">0</span>
+      </p>
+      <p>
+        computer score:
+        <span id="computerscorescore">0</span>
+      </p>
+    </div>
+    <script>
+      let playscore = 0;
+      let computerscore = 0;
+
+      function playGame(choice) {
+        let choices = ["rock", "paper", "scissors"];
+        let randomnnumber = Math.floor(Math.random() * 3);
+        let computerchoice = choices[randomnnumber];
+
+        document.getElementById("yourchoice").textContent =
+          "you chose: " + choice;
+        document.getElementById("computerchoice").textContent =
+          "computer chose: " + computerchoice;
+        if (choice === computerchoice) {
+          document.getElementById("result").textContent = "result: its a tie!";
+        } else if (
+          (choice === "rock" && computerchoice === "scissors") ||
+          (choice === "paper" && computerchoice === "rock") ||
+          (choice === "scissors" && computerchoice === "paper")
+        ) {
+          document.getElementById("result").textContent = "result: you win!";
+          playscore++;
+        } else {
+          document.getElementById("result").textContent =
+            "result: computer wins!";
+          computerscore++;
+        }
+
+        document.getElementById("playscorescore").textContent = playscore;
+        document.getElementById("computerscorescore").textContent =
+          computerscore;
+      }
+    </script>
+  </body>
+</html>

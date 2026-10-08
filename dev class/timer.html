@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .clock-container {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        #clock {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        #data {
+            font-size: 24px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <h1 id="clock">00:00</h1>
+        <p id="data">loading..</p>
+    </div>
+
+    <script>
+        function updateClock( ){        let time = new Date();
+
+        let hours = time.getHours();
+        let minute = time.getMinutes();
+        let seconds = time.getSeconds();
+
+        if(hours < 10){
+         hours = "0" + hours;
+        }
+
+        if(minute < 10){
+            minute = "0" + minute;
+        }
+
+        if(seconds < 10){
+            seconds = "0" + seconds;
+        }
+
+
+        document.getElementById("clock").innerHTML = hours + ":" + minute + ":" + seconds;
+        
+        let day = time.getDate();
+        let month = time.getMonth() + 1;
+        let year = time.getFullYear();
+
+        document.getElementById("data").innerHTML = day + "/" + month + "/" + year;
+
+
+
+
+
+
+
+}
+
+        setInterval(updateClock, 100);
+
+        updateClock();
+    </script>
+</body>
+</html>

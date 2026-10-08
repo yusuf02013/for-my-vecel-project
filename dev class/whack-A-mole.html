@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Whack-a-Mole</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #6dd3ff, #d9f99d);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .game {
+        text-align: center;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+        width: min(90vw, 520px);
+      }
+
+      .hud {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        font-weight: bold;
+        color: #1f2937;
+      }
+
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-top: 15px;
+      }
+
+      .hole {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1;
+        border: none;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 30% 30%,
+          #7c4a2d,
+          #4a2a19 60%,
+          #2b180f
+        );
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: inset 0 -8px 0 rgba(0, 0, 0, 0.25);
+      }
+
+      .mole {
+        position: absolute;
+        left: 50%;
+        bottom: -100%;
+        width: 70%;
+        height: 70%;
+        transform: translateX(-50%);
+        border-radius: 50% 50% 40% 40%;
+        background: radial-gradient(
+          circle at 30% 30%,
+          #f8d7a5,
+          #c77a2d 60%,
+          #8f4e16
+        );
+        transition: bottom 0.18s ease;
+        box-shadow: inset -8px -10px 0 rgba(0, 0, 0, 0.1);
+      }
+
+      .mole::before,
+      .mole::after {
+        content: "";
+        position: absolute;
+        width: 16%;
+        height: 16%;
+        background: #111827;
+        border-radius: 50%;
+        top: 25%;
+      }
+
+      .mole::before {
+        left: 20%;
+      }
+
+      .mole::after {
+        right: 20%;
+      }
+
+      .mole .nose {
+        position: absolute;
+        width: 18%;
+        height: 12%;
+        background: #fca5a5;
+        border-radius: 50%;
+        left: 50%;
+        top: 40%;
+        transform: translateX(-50%);
+      }
+
+      .mole.show {
+        bottom: 5%;
+      }
+
+      .hole.hit .mole {
+        background: radial-gradient(
+          circle at 30% 30%,
+          #facc15,
+          #eab308 60%,
+          #b45309
+        );
+        bottom: 5%;
+      }
+
+      button {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-size: 1rem;
+        cursor: pointer;
+        background: #1d4ed8;
+        color: white;
+        font-weight: bold;
+        transition: transform 0.1s ease;
+      }
+
+      button:hover {
+        transform: translateY(-1px);
+      }
+
+      .message {
+        margin-top: 18px;
+        font-size: 1.05rem;
+        color: #111827;
+        font-weight: bold;
+        min-height: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game">
+      <div class="hud">
+        <span>Score: <span id="score">0</span></span>
+        <span>Time: <span id="time">20</span>s</span>
+      </div>
+
+      <button id="startBtn">Start Game</button>
+
+      <div class="board" id="board">
+        <button class="hole" aria-label="mole hole 1">
+          <span class="mole"></span>
+        </button>
+        <button class="hole" aria-label="mole hole 2">
+          <span class="mole"></span>
+        </button>
+        <button class="hole" aria-label="mole hole 3">
+          <span class="mole"></span>
+        </button>
+        <button class="hole" aria-label="mole hole 4">
+          <span class="mole"></span>
+        </button>
+        <button class="hole" aria-label="mole hole 5">
+          <span class="mole"></span>
+        </button>
+        <button class="hole" aria-label="mole hole 6">
+          <span class="mole"></span>
+        </button>
+        <button class="hole" aria-label="mole hole 7">
+          <span class="mole"></span>
+        </button>
+        <button class="hole" aria-label="mole hole 8">
+          <span class="mole"></span>
+        </button>
+        <button class="hole" aria-label="mole hole 9">
+          <span class="mole"></span>
+        </button>
+      </div>
+
+      <div class="message" id="message">Click start to play!</div>
+    </div>
+
+    <script>
+      const holes = document.querySelectorAll(".hole");
+      const scoreText = document.getElementById("score");
+      const timeText = document.getElementById("time");
+      const message = document.getElementById("message");
+      const startButton = document.getElementById("startBtn");
+      let score = 0;
+      let time = 20;
+      let activeHole;
+      let timer;
+      let moleTimer;
+      let moleInterval;
+
+      function showMole() {
+        holes.forEach((hole) => {
+          hole.querySelector(".mole").classList.remove("show");
+          hole.classList.remove("hit");
+        });
+        activeHole = holes[Math.floor(Math.random() * holes.length)];
+        activeHole.querySelector(".mole").classList.add("show");
+        clearTimeout(moleTimer);
+        moleTimer = setTimeout(() => {
+          activeHole.querySelector(".mole").classList.remove("show");
+          activeHole = null;
+        }, 600);
+      }
+
+      function endGame() {
+        clearInterval(timer);
+        clearInterval(moleInterval);
+        clearTimeout(moleTimer);
+        activeHole = null;
+        holes.forEach((hole) =>
+          hole.querySelector(".mole").classList.remove("show"),
+        );
+        message.textContent = "Game over! Your score: " + score;
+        startButton.textContent = "Play Again";
+      }
+
+      function startGame() {
+        score = 0;
+        time = 20;
+        scoreText.textContent = score;
+        timeText.textContent = time;
+        message.textContent = "Whack the mole!";
+        startButton.textContent = "Restart";
+        clearInterval(timer);
+        clearInterval(moleInterval);
+        showMole();
+        moleInterval = setInterval(showMole, 700);
+        timer = setInterval(() => {
+          time--;
+          timeText.textContent = time;
+          if (time === 0) endGame();
+        }, 1000);
+      }
+
+      holes.forEach((hole) =>
+        hole.addEventListener("click", () => {
+          if (hole !== activeHole) return;
+          hole.querySelector(".mole").classList.remove("show");
+          hole.classList.add("hit");
+          score++;
+          scoreText.textContent = score;
+          message.textContent = "Nice hit!";
+          activeHole = null;
+        }),
+      );
+
+      startButton.addEventListener("click", startGame);
+    </script>
+  </body>
+</html>

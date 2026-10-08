@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QUIZ</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      .quiz-container {
+        background: white;
+        width: 400px;
+        padding: 30px;
+        border-radius: 10px;
+        text-align: center;
+      }
+      h1 {
+        margin-bottom: 20px;
+      }
+      .question {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+
+      .answer-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: aquamarine;
+        font-size: 16px;
+        margin: 10px 0;
+      }
+
+      .answer-btn:hover {
+        background-color: #ccc;
+      }
+      .result {
+        margin-top: 20px;
+        font-weight: bold;
+        font-size: 18px;
+      }
+      #next-btn {
+        margin-top: 20px;
+        padding: 10px 25px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: black;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="quiz-container">
+      <h1>Simple Quiz</h1>
+
+      <p class="question" id="question">Question goes here</p>
+
+      <button class="answer-btn" id="answer1">Answer 1</button>
+      <button class="answer-btn" id="answer2">Answer 2</button>
+      <button class="answer-btn" id="answer3">Answer 3</button>
+      <button class="answer-btn" id="answer4">Answer 4</button>
+
+      <p class="result" id="result"></p>
+
+      <p id="score-element"></p>
+
+      <button id="next-btn">Next Question</button>
+    </div>
+
+    <script>
+      const questions = [
+        {
+          question: "what is 2 + 2?",
+          answers: ["3", "4", "5", "6"],
+          correctanswer: "4",
+        },
+        {
+          question: "what is the capital of Nigeria?",
+          answers: ["Lagos", "Abuja", "Kano", "Jos"],
+          correctanswer: "Abuja",
+        },
+        {
+          question:
+            "what is the language we use to make a webpage interactive?",
+          answers: ["HTML", "CSS", "JavaScript", "Python"],
+          correctanswer: "JavaScript",
+        },
+        {
+          question: "what is the language we use to style a webpage?",
+          answers: ["HTML", "CSS", "JavaScript", "Python"],
+          correctanswer: "CSS",
+        },
+        {
+          question: "what does HTML stands for?",
+          answers: [
+            "Hyper text Markup Langauge",
+            "Hyper text Maching language",
+            "Hyper tool Markup language",
+            "Home tool Markup language",
+          ],
+          correctanswer: "Hyper text Markup Langauge",
+        },
+      ];
+
+      let score = 0;
+      let currentQuestion = 0;
+
+      const nextBtn = document.getElementById("next-btn");
+      const questionElement = document.getElementById("question");
+      const result = document.getElementById("result");
+      const scoreElement = document.getElementById("score-element");
+      const answer1 = document.getElementById("answer1");
+      const answer2 = document.getElementById("answer2");
+      const answer3 = document.getElementById("answer3");
+      const answer4 = document.getElementById("answer4");
+
+      const answerButtons = [answer1, answer2, answer3, answer4];
+
+      function showQuestions() {
+        const current = questions[currentQuestion];
+        questionElement.textContent = current.question;
+
+        answer1.textContent = current.answers[0];
+        answer2.textContent = current.answers[1];
+        answer3.textContent = current.answers[2];
+        answer4.textContent = current.answers[3];
+
+        result.textContent = "";
+        nextBtn.style.display = "none";
+
+        scoreElement.textContent = `Score: ${score}/${questions.length}`;
+      }
+
+      function checkAnswer(event) {
+        const clickedButton = event.target;
+        const selectedAnswer = clickedButton.textContent;
+        const correctAnswer = questions[currentQuestion].correctanswer;
+
+        if (selectedAnswer === correctAnswer) {
+          result.textContent = "correct";
+          score++;
+        } else {
+          result.textContent = `wrong! correct answer is ${correctAnswer}`;
+        }
+
+        answerButtons.forEach(function (button) {
+          button.disabled = true;
+        });
+
+        nextBtn.style.display = "block";
+        scoreElement.textContent = `score : ${score}/${questions.length}`;
+      }
+
+      nextBtn.addEventListener("click", function () {
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+          answerButtons.forEach(function (button) {
+            button.disabled = false;
+          });
+          showQuestions();
+        } else {
+          questionElement.textContent = "quiz finished";
+          result.textContent = `your score ${score} out of ${questions.length}`;
+
+          answerButtons.forEach(function (button) {
+            button.style.display = "none";
+          });
+          nextBtn.style.display = "none";
+          scoreElement.textContent = "";
+
+          showQuestions();
+        }
+      });
+
+      answerButtons.forEach(function (button) {
+        button.addEventListener("click", checkAnswer);
+      });
+
+      showQuestions();
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DOCUMENT</title>
+    <style>
+       body {
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           height: 100vh;
+           background :#f4f6f8
+       }
+      .counter {
+        padding: 40px 50px;
+        text-align: center;
+        background:white;
+        border-radius: 16px;
+       }
+      #counter {
+           font-size: 50px;
+           margin: 0 0 20px;
+           color: #333;
+       }
+       button{
+        font-size: 50px;
+        padding: 10px 20px;
+           cursor:pointer;
+        color:white;
+           border: none;
+        border-radius: 5px;
+        transition: transform 0.1s ease;
+           margin: 5px;
+       }
+       button:active{
+           transform:scale(0.9);
+       }
+       button:nth-of-type(1){
+           background:#4CAF50;
+       }
+       button:nth-of-type(2){
+           background:#f44336;
+       }
+       button:nth-of-type(3){
+           background:#757575;
+       }
+    </style>
+  </head>
+  <body>
+    <div class="counter">
+      <h1 id="count">0</h1>
+      <button onclick="increase()">+</button>
+      <button onclick="decrease()">-</button>
+      <button onclick="reset()">Reset</button>
+    </div>
+
+    <script>
+      let count = 0;
+      const countDisplay = document.getElementById("count");
+
+      function increase() {
+        count++;
+        countDisplay.textContent = count;
+      }
+
+      function decrease() {
+        count--;
+        countDisplay.textContent = count;
+      }
+
+      function reset() {
+        count = 0;
+        countDisplay.textContent = count;
+      }
+    </script>
+  </body>
+</html>
